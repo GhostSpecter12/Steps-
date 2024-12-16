@@ -1,0 +1,32 @@
+def calculate_slippage(input_amount, reserve_in, reserve_out, fee=0.003):
+    """
+    Calculate slippage for a trade on Uniswap.
+    
+    :param input_amount: The amount of the input token being traded (in base units).
+    :param reserve_in: The amount of the input token in the liquidity pool (in base units).
+    :param reserve_out: The amount of the output token in the liquidity pool (in base units).
+    :param fee: The fee percentage (default 0.3% for Uniswap v2).
+    
+    :return: The slippage percentage.
+    """
+    # Apply the fee to the input amount
+    effective_input_amount = input_amount * (1 - fee)
+
+    # Calculate the amount of output tokens that would be received (before slippage)
+    amount_out_expected = reserve_out - (reserve_in * reserve_out) / (reserve_in + effective_input_amount)
+
+    # Calculate the actual output amount considering the slippage
+    amount_out_actual = reserve_out - (reserve_in * reserve_out) / (reserve_in + input_amount)
+
+    # Calculate slippage as the percentage difference
+    slippage = ((amount_out_expected - amount_out_actual) / amount_out_expected) * 100
+    return slippage
+
+
+# Example usage:
+input_amount = 1000  # Example: 1000 tokens of the input token
+reserve_in = 50000  # Example: 50,000 tokens of the input token in the pool
+reserve_out = 100000  # Example: 100,000 tokens of the output token in the pool
+
+slippage = calculate_slippage(input_amount, reserve_in, reserve_out)
+print(f"Slippage: {slippage:.4f}%")
