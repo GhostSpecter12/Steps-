@@ -1,0 +1,2 @@
+# Steps-
+Calculate the slippage
